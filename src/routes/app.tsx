@@ -36,17 +36,19 @@ export const Route = createFileRoute("/app")({
   component: AppLayout,
 });
 
-const workspace = [
+type NavItem = { title: string; to: string; icon: typeof MessageSquare; exact?: boolean };
+
+const workspace: NavItem[] = [
   { title: "Main Chat", to: "/app", icon: MessageSquare, exact: true },
   { title: "Dashboard", to: "/app/dashboard", icon: LayoutDashboard },
   { title: "Tasks", to: "/app/tasks", icon: CheckSquare },
-] as const;
+];
 
-const build = [
+const build: NavItem[] = [
   { title: "AI Teams", to: "/app/teams", icon: Users },
   { title: "Plans", to: "/app/plans", icon: ListTodo },
   { title: "Resources", to: "/app/resources", icon: Library },
-] as const;
+];
 
 function AppLayout() {
   return (

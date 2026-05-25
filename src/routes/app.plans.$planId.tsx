@@ -48,7 +48,7 @@ function PlanDetail() {
         <div className="grid md:grid-cols-[1fr_240px] gap-8">
           <div className="space-y-2">
             <p className="text-eyebrow mb-4">Steps</p>
-            {plan.steps.map((s, i) => (
+            {plan.steps.map((s: typeof plan.steps[number], i: number) => (
               <div
                 key={i}
                 className="glass rounded-xl p-4 flex items-start gap-4"
