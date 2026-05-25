@@ -10,11 +10,25 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as EnterRouteImport } from './routes/enter'
+import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as AppTasksRouteImport } from './routes/app.tasks'
+import { Route as AppResourcesRouteImport } from './routes/app.resources'
+import { Route as AppDashboardRouteImport } from './routes/app.dashboard'
+import { Route as AppTeamsIndexRouteImport } from './routes/app.teams.index'
+import { Route as AppPlansIndexRouteImport } from './routes/app.plans.index'
+import { Route as AppTeamsTeamIdRouteImport } from './routes/app.teams.$teamId'
+import { Route as AppPlansPlanIdRouteImport } from './routes/app.plans.$planId'
 
 const EnterRoute = EnterRouteImport.update({
   id: '/enter',
   path: '/enter',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -22,30 +36,130 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppTasksRoute = AppTasksRouteImport.update({
+  id: '/tasks',
+  path: '/tasks',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppResourcesRoute = AppResourcesRouteImport.update({
+  id: '/resources',
+  path: '/resources',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDashboardRoute = AppDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppTeamsIndexRoute = AppTeamsIndexRouteImport.update({
+  id: '/teams/',
+  path: '/teams/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPlansIndexRoute = AppPlansIndexRouteImport.update({
+  id: '/plans/',
+  path: '/plans/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppTeamsTeamIdRoute = AppTeamsTeamIdRouteImport.update({
+  id: '/teams/$teamId',
+  path: '/teams/$teamId',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPlansPlanIdRoute = AppPlansPlanIdRouteImport.update({
+  id: '/plans/$planId',
+  path: '/plans/$planId',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
   '/enter': typeof EnterRoute
+  '/app/dashboard': typeof AppDashboardRoute
+  '/app/resources': typeof AppResourcesRoute
+  '/app/tasks': typeof AppTasksRoute
+  '/app/': typeof AppIndexRoute
+  '/app/plans/$planId': typeof AppPlansPlanIdRoute
+  '/app/teams/$teamId': typeof AppTeamsTeamIdRoute
+  '/app/plans/': typeof AppPlansIndexRoute
+  '/app/teams/': typeof AppTeamsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/enter': typeof EnterRoute
+  '/app/dashboard': typeof AppDashboardRoute
+  '/app/resources': typeof AppResourcesRoute
+  '/app/tasks': typeof AppTasksRoute
+  '/app': typeof AppIndexRoute
+  '/app/plans/$planId': typeof AppPlansPlanIdRoute
+  '/app/teams/$teamId': typeof AppTeamsTeamIdRoute
+  '/app/plans': typeof AppPlansIndexRoute
+  '/app/teams': typeof AppTeamsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
   '/enter': typeof EnterRoute
+  '/app/dashboard': typeof AppDashboardRoute
+  '/app/resources': typeof AppResourcesRoute
+  '/app/tasks': typeof AppTasksRoute
+  '/app/': typeof AppIndexRoute
+  '/app/plans/$planId': typeof AppPlansPlanIdRoute
+  '/app/teams/$teamId': typeof AppTeamsTeamIdRoute
+  '/app/plans/': typeof AppPlansIndexRoute
+  '/app/teams/': typeof AppTeamsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/enter'
+  fullPaths:
+    | '/'
+    | '/app'
+    | '/enter'
+    | '/app/dashboard'
+    | '/app/resources'
+    | '/app/tasks'
+    | '/app/'
+    | '/app/plans/$planId'
+    | '/app/teams/$teamId'
+    | '/app/plans/'
+    | '/app/teams/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/enter'
-  id: '__root__' | '/' | '/enter'
+  to:
+    | '/'
+    | '/enter'
+    | '/app/dashboard'
+    | '/app/resources'
+    | '/app/tasks'
+    | '/app'
+    | '/app/plans/$planId'
+    | '/app/teams/$teamId'
+    | '/app/plans'
+    | '/app/teams'
+  id:
+    | '__root__'
+    | '/'
+    | '/app'
+    | '/enter'
+    | '/app/dashboard'
+    | '/app/resources'
+    | '/app/tasks'
+    | '/app/'
+    | '/app/plans/$planId'
+    | '/app/teams/$teamId'
+    | '/app/plans/'
+    | '/app/teams/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
   EnterRoute: typeof EnterRoute
 }
 
@@ -58,6 +172,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EnterRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -65,11 +186,92 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/tasks': {
+      id: '/app/tasks'
+      path: '/tasks'
+      fullPath: '/app/tasks'
+      preLoaderRoute: typeof AppTasksRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/resources': {
+      id: '/app/resources'
+      path: '/resources'
+      fullPath: '/app/resources'
+      preLoaderRoute: typeof AppResourcesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/dashboard': {
+      id: '/app/dashboard'
+      path: '/dashboard'
+      fullPath: '/app/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/teams/': {
+      id: '/app/teams/'
+      path: '/teams'
+      fullPath: '/app/teams/'
+      preLoaderRoute: typeof AppTeamsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/plans/': {
+      id: '/app/plans/'
+      path: '/plans'
+      fullPath: '/app/plans/'
+      preLoaderRoute: typeof AppPlansIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/teams/$teamId': {
+      id: '/app/teams/$teamId'
+      path: '/teams/$teamId'
+      fullPath: '/app/teams/$teamId'
+      preLoaderRoute: typeof AppTeamsTeamIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/plans/$planId': {
+      id: '/app/plans/$planId'
+      path: '/plans/$planId'
+      fullPath: '/app/plans/$planId'
+      preLoaderRoute: typeof AppPlansPlanIdRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
+interface AppRouteChildren {
+  AppDashboardRoute: typeof AppDashboardRoute
+  AppResourcesRoute: typeof AppResourcesRoute
+  AppTasksRoute: typeof AppTasksRoute
+  AppIndexRoute: typeof AppIndexRoute
+  AppPlansPlanIdRoute: typeof AppPlansPlanIdRoute
+  AppTeamsTeamIdRoute: typeof AppTeamsTeamIdRoute
+  AppPlansIndexRoute: typeof AppPlansIndexRoute
+  AppTeamsIndexRoute: typeof AppTeamsIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppDashboardRoute: AppDashboardRoute,
+  AppResourcesRoute: AppResourcesRoute,
+  AppTasksRoute: AppTasksRoute,
+  AppIndexRoute: AppIndexRoute,
+  AppPlansPlanIdRoute: AppPlansPlanIdRoute,
+  AppTeamsTeamIdRoute: AppTeamsTeamIdRoute,
+  AppPlansIndexRoute: AppPlansIndexRoute,
+  AppTeamsIndexRoute: AppTeamsIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
   EnterRoute: EnterRoute,
 }
 export const routeTree = rootRouteImport
