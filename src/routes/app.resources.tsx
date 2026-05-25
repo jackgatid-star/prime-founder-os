@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { resources, teamById } from "@/lib/mock/data";
-import { Search, FileText, Video, ImageIcon, Palette, Target, Sparkles } from "lucide-react";
+import { resources, teamById, teams, type TeamId } from "@/lib/mock/data";
+import { Search, FileText, Video, ImageIcon, Palette, Target, Sparkles, Folder } from "lucide-react";
 
 export const Route = createFileRoute("/app/resources")({
   component: Resources,
