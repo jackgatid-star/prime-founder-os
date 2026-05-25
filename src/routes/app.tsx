@@ -8,6 +8,9 @@ import {
   CheckSquare,
   Search,
   Command,
+  Bell,
+  Settings,
+  Sparkles,
 } from "lucide-react";
 import {
   Sidebar,
@@ -24,7 +27,7 @@ import {
   SidebarHeader,
 } from "@/components/ui/sidebar";
 import { Wordmark } from "@/components/wordmark";
-import { OrbMini } from "@/components/orb";
+import { teams } from "@/lib/mock/data";
 
 export const Route = createFileRoute("/app")({
   head: () => ({
@@ -53,10 +56,25 @@ const build: NavItem[] = [
 function AppLayout() {
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-background text-foreground">
+      <div className="min-h-screen flex w-full bg-background text-foreground relative overflow-hidden">
+        {/* Ambient chamber backdrop */}
+        <div className="pointer-events-none fixed inset-0 -z-10">
+          <div
+            className="absolute inset-0 opacity-60"
+            style={{
+              background:
+                "radial-gradient(ellipse 80% 50% at 50% 100%, var(--orb-glow), transparent 60%)",
+              filter: "blur(40px)",
+            }}
+          />
+          <div
+            className="absolute inset-x-0 top-0 h-px"
+            style={{ background: "linear-gradient(90deg, transparent, var(--hairline), transparent)" }}
+          />
+        </div>
         <AppSidebar />
         <div className="flex-1 flex flex-col min-w-0">
-          <TopBar />
+          <TopConsole />
           <main className="flex-1 min-h-0 flex flex-col">
             <Outlet />
           </main>
@@ -112,13 +130,54 @@ function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        <SidebarGroup className="mt-2">
+          <SidebarGroupLabel className="text-eyebrow">Teams</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {teams.map((t) => (
+                <SidebarMenuItem key={t.id}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={pathname === `/app/teams/${t.id}`}
+                    tooltip={t.name}
+                  >
+                    <Link
+                      to="/app/teams/$teamId"
+                      params={{ teamId: t.id }}
+                      className="flex items-center gap-2.5"
+                    >
+                      <span
+                        className="h-2 w-2 rounded-full shrink-0"
+                        style={{
+                          background: t.accentVar,
+                          boxShadow: `0 0 8px -1px ${t.accentVar}`,
+                        }}
+                      />
+                      <span className="truncate">{t.name}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarContent>
       <SidebarFooter className="px-3 py-4 border-t border-sidebar-border">
         <div className="flex items-center gap-2.5">
-          <OrbMini size={28} />
+          <div
+            className="h-7 w-7 rounded-full grid place-items-center text-[10px] font-medium shrink-0"
+            style={{
+              background: "linear-gradient(135deg, oklch(0.3 0.02 230), oklch(0.12 0.005 240))",
+              boxShadow: "inset 0 1px 0 oklch(1 0 0 / 0.1), 0 0 0 1px var(--hairline)",
+              color: "var(--orb)",
+            }}
+          >
+            EM
+          </div>
           <div className="min-w-0">
-            <p className="text-[12px] text-foreground truncate">Founder</p>
-            <p className="text-[11px] text-muted-foreground truncate">Operating System</p>
+            <p className="text-[12px] text-foreground truncate">Eli Maren</p>
+            <p className="text-[11px] text-muted-foreground truncate">Founder</p>
           </div>
         </div>
       </SidebarFooter>
@@ -126,10 +185,10 @@ function AppSidebar() {
   );
 }
 
-function TopBar() {
+function TopConsole() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const crumb = (() => {
-    if (pathname === "/app") return "Main Chat";
+    if (pathname === "/app") return "Home";
     if (pathname.startsWith("/app/teams")) return "AI Teams";
     if (pathname.startsWith("/app/plans")) return "Plans";
     if (pathname.startsWith("/app/resources")) return "Resources";
@@ -139,17 +198,65 @@ function TopBar() {
   })();
 
   return (
-    <header className="h-14 border-b border-hairline flex items-center px-4 gap-3 shrink-0">
+    <header className="h-14 border-b border-hairline flex items-center px-4 gap-3 shrink-0 bg-background/60 backdrop-blur-xl">
       <SidebarTrigger className="h-8 w-8" />
       <div className="h-4 w-px bg-hairline" />
       <p className="text-[13px] text-foreground/90">{crumb}</p>
+
       <div className="ml-auto flex items-center gap-2">
-        <div className="hidden md:flex items-center gap-2 glass rounded-lg px-3 py-1.5 text-[12px] text-muted-foreground w-72">
+        {/* Search */}
+        <div className="hidden md:flex items-center gap-2 glass rounded-lg px-3 py-1.5 text-[12px] text-muted-foreground w-80">
           <Search className="h-3.5 w-3.5" />
-          <span className="flex-1">Search Founder OS</span>
-          <kbd className="flex items-center gap-1 text-[10px] opacity-60">
+          <span className="flex-1">Search teams, plans, resources…</span>
+          <kbd className="flex items-center gap-0.5 text-[10px] opacity-60">
             <Command className="h-3 w-3" />K
           </kbd>
+        </div>
+
+        {/* Tokens */}
+        <div
+          className="hidden sm:flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[12px]"
+          style={{
+            background: "var(--surface)",
+            border: "1px solid var(--hairline)",
+          }}
+        >
+          <Sparkles className="h-3.5 w-3.5" style={{ color: "var(--orb)" }} />
+          <span className="text-foreground/90 tabular-nums">12,480</span>
+          <span className="text-muted-foreground/70">tokens</span>
+        </div>
+
+        {/* Notifications */}
+        <button
+          aria-label="Notifications"
+          className="relative h-8 w-8 grid place-items-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-surface transition-colors"
+        >
+          <Bell className="h-4 w-4" />
+          <span
+            className="absolute top-1.5 right-1.5 h-1.5 w-1.5 rounded-full"
+            style={{ background: "var(--orb)", boxShadow: "0 0 6px var(--orb)" }}
+          />
+        </button>
+
+        {/* Settings */}
+        <button
+          aria-label="Settings"
+          className="h-8 w-8 grid place-items-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-surface transition-colors"
+        >
+          <Settings className="h-4 w-4" />
+        </button>
+
+        {/* Profile */}
+        <div className="h-px w-px" />
+        <div
+          className="h-8 w-8 rounded-full grid place-items-center text-[10px] font-medium ml-1"
+          style={{
+            background: "linear-gradient(135deg, oklch(0.3 0.02 230), oklch(0.12 0.005 240))",
+            boxShadow: "inset 0 1px 0 oklch(1 0 0 / 0.1), 0 0 0 1px var(--hairline)",
+            color: "var(--orb)",
+          }}
+        >
+          EM
         </div>
       </div>
     </header>
